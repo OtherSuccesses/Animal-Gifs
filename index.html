@@ -15,9 +15,6 @@
 		<div id="button-section">
 			<button data-name="Badger">Badger</button>
 		</div>
-		<!-- Where the gifs appear -->
-		<div id="GIF-section">
-		</div>
 		<!-- Form to add more buttons -->
 		<form id="button-add">
 			<label for="animal-submit"> Add an Animal!
@@ -26,10 +23,18 @@
 			<input type="submit" id="animal-button" value="Add Animal!">		
 		</form>
 	</div>
+	<!-- Where the gifs appear -->
+	<div id="GIF-section">
+	</div>
+
+
 </div>
 </body>
 <script>
+$(document).ready(function(){
+
 	var animals = ["Cat", "Dog", "Parrot", "Bear"];
+
 
 
 //Button Display function
@@ -46,16 +51,32 @@
 	}
 
 
+
+//Put the buttons on the page	
+	displayButtons();
+
+
+//How to add Buttons
 	$("#animal-button").on("click", function(event) {
-        event.preventDefault();
+		event.preventDefault();
         var animalAdd = $("#animal-submit").val().trim();
         animals.push(animalAdd);
         displayButtons();
       });
 
-//Put the buttons on the page	
-	displayButtons();
+//TRYING to get the gifs to animate. I can load them animating.	
+    $(".gif").on("click", function() {
+      var state = $(this).attr("data-state");
+      if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+      } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      }
+    });
 
+//Retrieves the Animals, but for some reason only when the datanames are already loaded...	
     $("button").on("click", function(event) {
     	event.preventDefault();
 		var animal = $(this).attr("data-name");
@@ -75,16 +96,20 @@
 	            var animalDiv = $("<div>");
 	            var p = $("<p>").text("Rating: " + results[i].rating);
 	            var animalImage = $("<img>");
-	            animalImage.attr("src", results[i].images.fixed_height.url);
+	            animalImage.addClass("gif");
+	            animalImage.attr("data-state", "still");
+	            animalImage.attr("src", results[i].images.fixed_height_still.url);
+	            animalImage.attr("data-animate", results[i].images.fixed_height.url);
+	            animalImage.attr("data-still", results[i].images.fixed_height_still.url);
 	            animalDiv.append(p);
 	            animalDiv.append(animalImage);
 
 	            $("#GIF-section").prepend(animalDiv);
           	}
         });
-
     });
 
+});
 
 </script>
 
